@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>விம்சோத்தரி தசை மற்றும் 108 பாதங்கள் ராசி கட்டம்</title>
+  <style>
+    body { font-family: 'Latha', Arial, sans-serif; background:#fffef8; text-align:center; padding:18px;}
+    .south-chart { display: grid; grid-template-columns: repeat(4,1fr); grid-template-areas:
+        "r10 r11 r12 r01" "r09 xx xx r02" "r08 xx xx r03" "r07 r06 r05 r04";
+      gap:3px; max-width:740px; margin:0 auto 22px;}
+    .box { background:#fff4dd; border:2px solid #b88; font-size:12px; color:#4b1d1d; box-sizing:border-box; 
+           display:flex;flex-direction:column;align-items:center;justify-content:flex-start; 
+           padding:5px 2px; text-align:left; height:182px; min-width:90px;}
+    .rasi-name { font-weight:bold; font-size:15px; color: maroon; margin-bottom:3px; text-align:center;}
+    .line { cursor:pointer; width:100%; border-radius:3px; padding:2px 2px; margin-bottom:1.2px; line-height:1.4;}
+    .highlight-dasa   { background:#1d60b2!important; color:#fff;font-weight:bold;}
+    .highlight-puthi  { background:#62a0ff!important; color:#003f75;}
+    .highlight-anth   { background:#d6ebff!important; color:#134766;}
+    .currentbox { margin:16px auto 24px auto; background:#e8ecf7; border-radius:7px; 
+      box-shadow: 0 1.5px 4px #87aed9bb; padding:12px 22px; font-size:1.14em; text-align:left; max-width:620px;}
+    .treeul { list-style:none; padding-left:28px; text-align:left; max-width:700px; margin:0 auto;}
+    .headli {font-weight:bold;}
+    .current-dasa    {background:#1d60b2 !important; color:#fff;}
+    .current-puthi   {background:#62a0ff !important; color:#003f75;}
+    .current-anthara {background:#d6ebff !important; color:#134766;}
+    .dates {color:#444; font-size:93%; margin-left:8px;}
+    .pada { color:#19733c;}
+    .padasplit { margin:20px 0 10px 0; background:#f4faff; border-radius:5px; padding:10px;}
+    .expcol { cursor:pointer; padding:2px 6px; background:#ddd; border-radius:3px; font-size:93%; margin-left:7px; color:#075; }
+    .expcol.open  { background:#bbdefb;}
+    .expcol:hover { text-decoration:underline; }
+    @media (max-width:900px) {
+      .box{height:auto;}
+      .south-chart{max-width:98vw;font-size:95%;}
+    }
+  </style>
+</head>
+<body>
+  <h2>🌟 தென் இந்திய ராசி கட்டம் (108 பாதங்கள்) + <span style="color:#175397;">விம்சோத்தரி தசை</span> 🌟</h2>
+  <div class="south-chart" id="rasiChart"></div>
+  <form onsubmit="event.preventDefault(); run();">
+    <div style="margin-bottom:6px;">
+      <label>பிறந்த தேதி: <input type="date" id="dob" required></label>
+      <span class="moonbox" style="margin-left:8px;">
+        சந்திரன் நீளம்: <input type="number" id="moon_deg" min="0" max="359" step="1" required style="width:38px;">°
+        <input type="number" id="moon_min" min="0" max="59"  step="1" required style="width:38px;">'
+        <input type="number" id="moon_sec" min="0" max="59"  step="1" required style="width:38px;">"
+      </span>
+      <button type="submit" style="margin-left:10px;">கணக்கிடு</button>
+    </div>
+    <div style='color:#336;font-size:93%;margin-bottom:2px;'>கணிப்புக்கான தேதி: 2025-07-17 00:10 IST</div>
+  </form>
+  <div id='current'></div>
+  <div id='dasatree'></div>
+  <div id='padasplit'></div>
+<script>
+/* ---------- Chart with all padas always visible ---------- */
+const rasiData = [
+  { name: "மேஷம்", code: "r01", padas: ["அஸ்வினி - பாதம் 1", "அஸ்வினி - பாதம் 2", "அஸ்வினி - பாதம் 3", "அஸ்வினி - பாதம் 4", "பரணி - பாதம் 1", "பரணி - பாதம் 2", "பரணி - பாதம் 3", "பரணி - பாதம் 4", "கிருத்திகை - பாதம் 1"] },
+  { name: "ரிஷபம்", code: "r02", padas: ["கிருத்திகை - பாதம் 2", "கிருத்திகை - பாதம் 3", "கிருத்திகை - பாதம் 4", "ரோஹிணி - பாதம் 1", "ரோஹிணி - பாதம் 2", "ரோஹிணி - பாதம் 3", "ரோஹிணி - பாதம் 4", "மிருகசீரிடம் - பாதம் 1", "மிருகசீரிடம் - பாதம் 2"] },
+  { name: "மிதுனம்", code: "r03", padas: ["மிருகசீரிடம் - பாதம் 3", "மிருகசீரிடம் - பாதம் 4", "திருவாதிரை - பாதம் 1", "திருவாதிரை - பாதம் 2", "திருவாதிரை - பாதம் 3", "திருவாதிரை - பாதம் 4", "புனர்பூசம் - பாதம் 1", "புனர்பூசம் - பாதம் 2", "புனர்பூசம் - பாதம் 3"] },
+  { name: "கடகம்", code: "r04", padas: ["புனர்பூசம் - பாதம் 4", "பூசம் - பாதம் 1", "பூசம் - பாதம் 2", "பூசம் - பாதம் 3", "பூசம் - பாதம் 4", "ஆயில்யம் - பாதம் 1", "ஆயில்யம் - பாதம் 2", "ஆயில்யம் - பாதம் 3", "ஆயில்யம் - பாதம் 4"] },
+  { name: "சிம்மம்", code: "r05", padas: ["மகம் - பாதம் 1", "மகம் - பாதம் 2", "மகம் - பாதம் 3", "மகம் - பாதம் 4", "பூரம் - பாதம் 1", "பூரம் - பாதம் 2", "பூரம் - பாதம் 3", "பூரம் - பாதம் 4", "உத்திரம் - பாதம் 1"] },
+  { name: "கன்னி", code: "r06", padas: ["உத்திரம் - பாதம் 2", "உத்திரம் - பாதம் 3", "உத்திரம் - பாதம் 4", "ஹஸ்தம் - பாதம் 1", "ஹஸ்தம் - பாதம் 2", "ஹஸ்தம் - பாதம் 3", "ஹஸ்தம் - பாதம் 4", "சித்திரை - பாதம் 1", "சித்திரை - பாதம் 2"] },
+  { name: "துலாம்", code: "r07", padas: ["சித்திரை - பாதம் 3", "சித்திரை - பாதம் 4", "சுவாதி - பாதம் 1", "சுவாதி - பாதம் 2", "சுவாதி - பாதம் 3", "சுவாதி - பாதம் 4", "விசாகம் - பாதம் 1", "விசாகம் - பாதம் 2", "விசாகம் - பாதம் 3"] },
+  { name: "விருச்சிகம்", code: "r08", padas: ["விசாகம் - பாதம் 4", "அனுஷம் - பாதம் 1", "அனுஷம் - பாதம் 2", "அனுஷம் - பாதம் 3", "அனுஷம் - பாதம் 4", "கேட்டை - பாதம் 1", "கேட்டை - பாதம் 2", "கேட்டை - பாதம் 3", "கேட்டை - பாதம் 4"] },
+  { name: "தனுசு", code: "r09", padas: ["மூலம் - பாதம் 1", "மூலம் - பாதம் 2", "மூலம் - பாதம் 3", "மூலம் - பாதம் 4", "பூராடம் - பாதம் 1", "பூராடம் - பாதம் 2", "பூராடம் - பாதம் 3", "பூராடம் - பாதம் 4", "உத்திராடம் - பாதம் 1"] },
+  { name: "மகரம்", code: "r10", padas: ["உத்திராடம் - பாதம் 2", "உத்திராடம் - பாதம் 3", "உத்திராடம் - பாதம் 4", "திருவோணம் - பாதம் 1", "திருவோணம் - பாதம் 2", "திருவோணம் - பாதம் 3", "திருவோணம் - பாதம் 4", "அவிட்டம் - பாதம் 1", "அவிட்டம் - பாதம் 2"] },
+  { name: "கும்பம்", code: "r11", padas: ["அவிட்டம் - பாதம் 3", "அவிட்டம் - பாதம் 4", "சதயம் - பாதம் 1", "சதயம் - பாதம் 2", "சதயம் - பாதம் 3", "சதயம் - பாதம் 4", "பூரட்டாதி - பாதம் 1", "பூரட்டாதி - பாதம் 2", "பூரட்டாதி - பாதம் 3"] },
+  { name: "மீனம்", code: "r12", padas: ["பூரட்டாதி - பாதம் 4", "உத்திரட்டாதி - பாதம் 1", "உத்திரட்டாதி - பாதம் 2", "உத்திரட்டாதி - பாதம் 3", "உத்திரட்டாதி - பாதம் 4", "ரேவதி - பாதம் 1", "ரேவதி - பாதம் 2", "ரேவதி - பாதம் 3", "ரேவதி - பாதம் 4"] }
+];
+let padaDomList=[];
+function drawChartGrid() {
+  document.getElementById('rasiChart').innerHTML = ''; padaDomList = [];
+  let padaCounter = 1;
+  rasiData.forEach((rasi, ri) => {
+    const box = document.createElement("div");
+    box.className = `box ${rasi.code}`;
+    const title = document.createElement("div");
+    title.className = "rasi-name";
+    title.textContent = rasi.name;
+    box.appendChild(title);
+    for(let j=0;j<9;j++) {
+      const line = document.createElement("div");
+      line.className = "line";
+      line.textContent = `${j + 1}. ${rasi.padas[j] ? rasi.padas[j] : "-"}`;
+      line.setAttribute("data-pada-index", padaCounter);
+      box.appendChild(line);
+      padaDomList[padaCounter] = line;
+      padaCounter++;
+    }
+    document.getElementById('rasiChart').appendChild(box);
+  });
+}
+function highlightPada(padaLabel, cls) {
+  document.querySelectorAll(`.line.${cls}`).forEach(e=>e.classList.remove(cls));
+  for(let i=1;i<=108;i++) {
+    let plabel = padaDomList[i]?padaDomList[i].textContent.replace(/^[0-9]+\.\s*/,''):'';
+    if(plabel === padaLabel) padaDomList[i].classList.add(cls);
+  }
+}
+function clearAllHighlights() {
+  ['highlight-dasa','highlight-puthi','highlight-anth'].forEach(cls =>
+    document.querySelectorAll(`.line.${cls}`).forEach(e=>e.classList.remove(cls))
+  );
+}
+
+const PLANETS = ["கேது","சுக்ரன்","சூரியன்","சந்திரன்","செவ்வாய்","ராகு","குரு","சனி","புதன்"];
+const DASA_YEARS = {"கேது":7,"சுக்ரன்":20,"சூரியன்":6,"சந்திரன்":10,"செவ்வாய்":7,"ராகு":18,"குரு":16,"சனி":19,"புதன்":17};
+const NAKS = [
+  {name:'அஷ்வினி',lord:'கேது'},
+  {name:'பரணி',lord:'சுக்ரன்'},
+  {name:'கிருத்திகை',lord:'சூரியன்'},
+  {name:'ரோஹிணி',lord:'சந்திரன்'},
+  {name:'மிருகசீரிடம்',lord:'செவ்வாய்'},
+  {name:'திருவாதிரை',lord:'ராகு'},
+  {name:'புனர்பூசம்',lord:'குரு'},
+  {name:'பூசம்',lord:'சனி'},
+  {name:'ஆயில்யம்',lord:'புதன்'},
+  {name:'மகம்',lord:'கேது'},
+  {name:'பூரம்',lord:'சுக்ரன்'},
+  {name:'உத்திரம்',lord:'சூரியன்'},
+  {name:'ஹஸ்தம்',lord:'சந்திரன்'},
+  {name:'சித்திரை',lord:'செவ்வாய்'},
+  {name:'சுவாதி',lord:'ராகு'},
+  {name:'விசாகம்',lord:'குரு'},
+  {name:'அனுஷம்',lord:'சனி'},
+  {name:'கேட்டை',lord:'புதன்'},
+  {name:'மூலம்',lord:'கேது'},
+  {name:'பூராடம்',lord:'சுக்ரன்'},
+  {name:'உத்திராடம்',lord:'சூரியன்'},
+  {name:'திருவோணம்',lord:'சந்திரன்'},
+  {name:'அவிட்டம்',lord:'செவ்வாய்'},
+  {name:'சதயம்',lord:'ராகு'},
+  {name:'பூரட்டாதி',lord:'குரு'},
+  {name:'உத்திரட்டாதி',lord:'சனி'},
+  {name:'ரேவதி',lord:'புதன்'}
+];
+function addYears(date, years) {
+  let d = new Date(date), y = Math.floor(years), m = (years-y)*12;
+  d.setFullYear(d.getFullYear()+y);
+  d.setMonth(d.getMonth()+Math.floor(m));
+  d.setDate(d.getDate() + Math.round((m - Math.floor(m)) * 30));
+  return d;
+}
+function formatDate(dt) { return dt.toISOString().slice(0,10); }
+function cycle9Nakshatras(start) { return Array(9).fill(0).map((_,j)=>(start+j)%27); }
+
+// --- CORRECT MAHADASHA: always start from Moon's nakshatra lord ---
+function getDasaLordsAndNames(moon) {
+  const nakLen = 13 + 20/60;
+  const nakIdx = Math.floor(moon / nakLen);
+  const startLord = NAKS[nakIdx].lord;
+  const planetOrder = PLANETS;
+  const startIdx = planetOrder.indexOf(startLord);
+  const dasaLords = planetOrder.slice(startIdx).concat(planetOrder.slice(0,startIdx));
+  const dasaNakIdxs = Array(9).fill(0).map((_,j)=>(nakIdx+j)%27);
+  const dasaNakNames = dasaNakIdxs.map(idx=>NAKS[idx].name);
+  return {dasaLords, dasaNakIdxs, dasaNakNames, nakIdx};
+}
+
+function dasaTree(moon, dob, now) {
+  const nakLen = 13 + 20/60;
+  const {dasaLords, dasaNakIdxs, dasaNakNames, nakIdx} = getDasaLordsAndNames(moon);
+  const offsetDeg = moon - nakIdx*nakLen;
+  let balance = 1 - (offsetDeg/nakLen);
+  let mdStarts = [], cursor = addYears(dob, -(DASA_YEARS[dasaLords[0]]* (1-balance)));
+  for(let i=0;i<9;i++) {
+    mdStarts[i] = new Date(cursor);
+    let span = DASA_YEARS[dasaLords[i]] ;
+    cursor = addYears(cursor, span);
+  }
+  let arr = dasaLords.map((lord,i) => ({
+    index:i, lord:lord, nak:dasaNakNames[i], nakIdx:dasaNakIdxs[i],
+    start:mdStarts[i], end:mdStarts[i+1]||cursor,
+    current:now >= mdStarts[i] && now < (mdStarts[i+1]||cursor), puthis: []
+  }));
+  arr.forEach((md, mdi) => {
+    let puthiNakIdxs = cycle9Nakshatras(md.nakIdx);
+    let puthiLords = puthiNakIdxs.map(idx=>NAKS[idx].lord);
+    let puthiNakNames = puthiNakIdxs.map(idx=>NAKS[idx].name);
+    let duration = (md.end-md.start)/(1000*60*60*24*365.2425);
+    let antarStarts = [], cursorP = new Date(md.start);
+    for(let j=0;j<9;j++) {
+      antarStarts[j] = new Date(cursorP);
+      let antardur = duration * (DASA_YEARS[puthiLords[j]]/120);
+      cursorP = addYears(cursorP, antardur);
+    }
+    md.puthis = puthiLords.map((plord,pi)=>({
+      index:pi, lord:plord, nak:puthiNakNames[pi], nakIdx:puthiNakIdxs[pi],
+      start:antarStarts[pi], end:antarStarts[pi+1] || cursorP,
+      current:now >= antarStarts[pi] && now < (antarStarts[pi+1] || cursorP), antharas:[]
+    }));
+    md.puthis.forEach((pt,pk)=>{
+      let anthNakIdxs = cycle9Nakshatras(pt.nakIdx);
+      let anthLords = anthNakIdxs.map(idx=>NAKS[idx].lord);
+      let anthNakNames = anthNakIdxs.map(idx=>NAKS[idx].name);
+      let dur = (pt.end-pt.start)/(1000*60*60*24*365.2425);
+      let anthStarts = [], cursorA = new Date(pt.start);
+      for(let k=0;k<9;k++) {
+        anthStarts[k]=new Date(cursorA);
+        let ahDur = dur * (DASA_YEARS[anthLords[k]]/120);
+        cursorA = addYears(cursorA, ahDur);
+      }
+      pt.antharas = anthLords.map((alord,ai)=>({
+        index:ai, lord:alord, nak:anthNakNames[ai], nakIdx:anthNakIdxs[ai],
+        start:anthStarts[ai], end:anthStarts[ai+1]||cursorA,
+        current:now >= anthStarts[ai] && now < (anthStarts[ai+1]||cursorA)
+      }));
+    });
+  });
+  return arr;
+}
+function currentPadaSplit(period) {
+  if(!period) return [];
+  let nakIdx = period.nakIdx;
+  let cursor = new Date(period.start);
+  let len = (period.end-period.start)/(1000*60*60*24*365.2425) / 4;
+  let arr=[];
+  for(let i=0;i<4;i++) {
+    let padaEnd = addYears(cursor, len);
+    arr.push({ nak: NAKS[nakIdx].name, pada: i+1, lord: NAKS[nakIdx].lord, start: new Date(cursor), end: padaEnd });
+    cursor = padaEnd;
+  }
+  return arr;
+}
+function findCurrentPath(tree) {
+  for(let i=0; i<tree.length; i++) {
+    let md = tree[i];
+    if(md.current) {
+      let dI = i, pI = -1, aI = -1;
+      for(let j=0;j<md.puthis.length;j++) {
+        let pt = md.puthis[j];
+        if(pt.current) {
+          pI=j;
+          for(let k=0;k<pt.antharas.length;k++) {
+            if(pt.antharas[k].current) {aI=k;}
+          }
+        }
+      }
+      return {dasa:dI, puthi:pI, anth:aI};
+    }
+  }
+  return {dasa:-1,puthi:-1,anth:-1};
+}
+function getCurrentPada(period, now) {
+  if(!period) return {padaIdx:-1, pada:null, from:null, to:null, nak:null};
+  let cursor = new Date(period.start);
+  let len = (period.end-period.start)/(1000*60*60*24*365.2425) / 4;
+  for(let i=0;i<4;i++) {
+    let padaEnd = addYears(cursor, len);
+    if(now >= cursor && now < padaEnd) return {
+      padaIdx: i, pada: i+1, from: new Date(cursor), to: new Date(padaEnd), nak: NAKS[period.nakIdx].name
+    }
+    cursor = padaEnd;
+  }
+  return {padaIdx:-1,pada:null,nak:null};
+}
+// Tree expand/collapse state
+let openState = {dasa:null,puthi:null,anthara:null};
+
+function renderSummary(md, mdPada, pt, ptPada, at, atPada) {
+  let html = `<div class="currentbox" style="margin-bottom:26px;text-align:left;">
+    <div><span style="color:#1d60b2;font-weight:bold;">தசை</span>: <b>${md.lord}</b> [${md.nak} - பாதம் ${mdPada.pada||'-'}] <span class="dates">${mdPada.from?formatDate(mdPada.from)+' - '+formatDate(mdPada.to):''}</span></div>
+    <div><span style="color:#266bbc;font-weight:bold;">புக்தி</span>: <b>${pt.lord}</b> [${pt.nak} - பாதம் ${ptPada.pada||'-'}] <span class="dates">${ptPada.from?formatDate(ptPada.from)+' - '+formatDate(ptPada.to):''}</span></div>
+    <div><span style="color:#3aa9ff;font-weight:bold;">அந்தரம்</span>: <b>${at.lord}</b> [${at.nak} - பாதம் ${atPada.pada||'-'}] <span class="dates">${atPada.from?formatDate(atPada.from)+' - '+formatDate(atPada.to):''}</span></div>
+    </div>`;
+  document.getElementById("current").innerHTML = html;
+}
+function renderTree(arr, curr, openState) {
+  function dasaUl() {
+    let html = "<ul class='treeul' style='margin-bottom:18px;font-size:110%'>";
+    arr.forEach((md, mi) => {
+      let cl = (curr.dasa===mi) ? " current-dasa":'';
+      html += `<li class="headli${cl}">`;
+      html += `<span class='expcol ${openState.dasa===mi?"open":""}' onclick='expandDasa(${mi});event.stopPropagation();'>${openState.dasa===mi?"▼":"►"}</span> தசை: <b>${md.lord}</b> <span class='pada' style="color:#224ca7;">[${md.nak}]</span> <span class="dates">${formatDate(md.start)} - ${formatDate(md.end)}</span>`;
+      if(openState.dasa===mi) html+=puthiUl(md,mi);
+      html += "</li>";
+    });
+    html += "</ul>"; return html;
+  }
+  function puthiUl(md,mdi) {
+    let html = "<ul style='margin-bottom:2.5px;'>";
+    md.puthis.forEach((pt, pi)=>{
+      let pcl = (curr.dasa===mdi && curr.puthi===pi) ? " current-puthi":'';
+      html += `<li class="headli${pcl}">`+
+        `<span class='expcol ${openState.puthi===pi?"open":""}' onclick='expandPuthi(${pi});event.stopPropagation();'>${openState.puthi===pi?"▼":"►"}</span> புக்தி: <b>${pt.lord}</b> <span class="pada" style="color:#266bbc;">[${pt.nak}]</span> <span class="dates">${formatDate(pt.start)} - ${formatDate(pt.end)}</span>`;
+      if(openState.puthi===pi) html+=antharaUl(pt,mdi,pi);
+      html += "</li>";
+    });
+    html += "</ul>"; return html;
+  }
+  function antharaUl(pt,mdi,pi) {
+    let html = "<ul>";
+    pt.antharas.forEach((at, ai)=>{
+      let acl = (curr.dasa===mdi && curr.puthi===pi && curr.anth===ai) ? " current-anthara":'';
+      html += `<li class="${acl}" onclick='expandAnthara(${ai});event.stopPropagation();'>அந்தரம்: <b>${at.lord}</b> <span class="pada" style="color:#3aa9ff;">[${at.nak}]</span> <span class="dates">${formatDate(at.start)} - ${formatDate(at.end)}</span></li>`;
+    }); html += "</ul>"; return html;
+  }
+  document.getElementById('dasatree').innerHTML = dasaUl();
+}
+function renderPadaSplit(arr, lab) {
+  document.getElementById("padasplit").innerHTML =
+    '<div class="padasplit"><b>படா பிரிப்பு:</b><br>'+lab+arr.map(pd=>`<div>${pd.nak} - பாதம் ${pd.pada} (${pd.lord}) <span class="dates">${formatDate(pd.start)} - ${formatDate(pd.end)}</span></div>`).join("")+'</div>';
+}
+// EXPAND HANDLERS
+window.expandDasa = function(idx) { openState.dasa=idx; openState.puthi=null; openState.anthara=null; renderAll(); };
+window.expandPuthi = function(idx) { openState.puthi=idx; openState.anthara=null; renderAll(); };
+window.expandAnthara = function(idx) { openState.anthara=idx; renderAll(); };
+function renderAll() {
+  let now = new Date("2025-07-17T00:10:00+05:30");
+  let md = vimData[vimCurrentPath.dasa], pt = md&&md.puthis[vimCurrentPath.puthi], at = pt&&pt.antharas[vimCurrentPath.anth];
+  let mdPada = getCurrentPada(md, now), ptPada = getCurrentPada(pt, now), atPada = getCurrentPada(at, now);
+  clearAllHighlights();
+  if(mdPada.pada>0) highlightPada(mdPada.nak+' - பாதம் '+mdPada.pada, 'highlight-dasa');
+  if(ptPada.pada>0) highlightPada(ptPada.nak+' - பாதம் '+ptPada.pada, 'highlight-puthi');
+  if(atPada.pada>0) highlightPada(atPada.nak+' - பாதம் '+atPada.pada, 'highlight-anth');
+  renderSummary(md, mdPada, pt, ptPada, at, atPada);
+  renderTree(vimData, vimCurrentPath, openState);
+  // Pada split panel
+  let target, lab="";
+  if(openState.anthara!=null) {
+    target = vimData[openState.dasa].puthis[openState.puthi].antharas[openState.anthara];
+    lab = `<u>அந்தரம் (${target.nak} ${target.lord}):</u>`;
+  }
+  else if(openState.puthi!=null) {
+    target = vimData[openState.dasa].puthis[openState.puthi];
+    lab = `<u>புக்தி (${target.nak} ${target.lord}):</u>`;
+  }
+  else if(openState.dasa!=null) {
+    target = vimData[openState.dasa];
+    lab = `<u>தசை (${target.nak} ${target.lord}):</u>`;
+  }
+  else target = null;
+  let arr = target?currentPadaSplit(target):[];
+  renderPadaSplit(arr, lab);
+}
+let vimData, vimCurrentPath;
+function run() {
+  let dobStr = document.getElementById("dob").value;
+  let mdeg = parseInt(document.getElementById("moon_deg").value)||0;
+  let mmin = parseInt(document.getElementById("moon_min").value)||0;
+  let msec = parseInt(document.getElementById("moon_sec").value)||0;
+  let moon = mdeg + mmin/60 + msec/3600;
+  if(isNaN(moon)||moon<0||moon>=360){alert("சந்திரன் நீளம் சரிபார்க்கவும்.");return;}
+  let dob = new Date(dobStr);
+  if(isNaN(dob.getTime())){alert("பிறந்த தேதி சரிபார்க்கவும்.");return;}
+  let now = new Date("2025-07-17T00:10:00+05:30");
+  vimData = dasaTree(moon, dob, now);
+  vimCurrentPath = findCurrentPath(vimData);
+  drawChartGrid();
+  openState = {dasa:vimCurrentPath.dasa, puthi:vimCurrentPath.puthi, anthara:vimCurrentPath.anth};
+  renderAll();
+}
+// First chart load
+drawChartGrid();
+</script>
+</body>
+</html>
