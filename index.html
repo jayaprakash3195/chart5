@@ -455,7 +455,7 @@ function renderTree(arr, curr, openState) {
     arr.forEach((md, mi) => {
       let cl = (curr.dasa===mi) ? " current-dasa":'';
       html += `<li class="headli${cl}">`;
-      html += `<span class='expcol ${openState.dasa===mi?"open":""}' onclick='expandDasa(${mi});event.stopPropagation();'>${openState.dasa===mi?"▼":"►"}</span> தசை: <b>${md.lord}</b> <span class='pada' style="color:#224ca7;">[${md.nak}]</span> <span class="dates">${formatDate(md.start)} - ${formatDate(md.end)}</span>`;
+      html += `<span class='expcol ${openState.dasa===mi?"open":""}' onclick='expandDasa(${mi});event.stopPropagation();'>${openState.dasa===mi?"▼":"►"}</span>  <b>${md.lord}</b> <span class='pada' style="color:#224ca7;"></span> <span class="dates">${formatDate(md.start)} - ${formatDate(md.end)}</span>`;
       if(openState.dasa===mi) html+=puthiUl(md,mi);
       html += "</li>";
     });
@@ -466,7 +466,7 @@ function renderTree(arr, curr, openState) {
     md.puthis.forEach((pt, pi)=>{
       let pcl = (curr.dasa===mdi && curr.puthi===pi) ? " current-puthi":'';
       html += `<li class="headli${pcl}">`+
-        `<span class='expcol ${openState.puthi===pi?"open":""}' onclick='expandPuthi(${pi});event.stopPropagation();'>${openState.puthi===pi?"▼":"►"}</span> புக்தி: <b>${pt.lord}</b> <span class="pada" style="color:#266bbc;">[${pt.nak}]</span> <span class="dates">${formatDate(pt.start)} - ${formatDate(pt.end)}</span>`;
+        `<span class='expcol ${openState.puthi===pi?"open":""}' onclick='expandPuthi(${pi});event.stopPropagation();'>${openState.puthi===pi?"▼":"►"}</span>  <b>${pt.lord}</b> <span class="pada" style="color:#266bbc;"></span> <span class="dates">${formatDate(pt.start)} - ${formatDate(pt.end)}</span>`;
       if(openState.puthi===pi) html+=antharaUl(pt,mdi,pi);
       html += "</li>";
     });
@@ -476,14 +476,14 @@ function renderTree(arr, curr, openState) {
     let html = "<ul>";
     pt.antharas.forEach((at, ai)=>{
       let acl = (curr.dasa===mdi && curr.puthi===pi && curr.anth===ai) ? " current-anthara":'';
-      html += `<li class="${acl}" onclick='expandAnthara(${ai});event.stopPropagation();'>அந்தரம்: <b>${at.lord}</b> <span class="pada" style="color:#3aa9ff;">[${at.nak}]</span> <span class="dates">${formatDate(at.start)} - ${formatDate(at.end)}</span></li>`;
+      html += `<li class="${acl}" onclick='expandAnthara(${ai});event.stopPropagation();'> <b>${at.lord}</b> <span class="pada" style="color:#3aa9ff;"></span> <span class="dates">${formatDate(at.start)} - ${formatDate(at.end)}</span></li>`;
     }); html += "</ul>"; return html;
   }
   document.getElementById('dasatree').innerHTML = dasaUl();
 }
 function renderPadaSplit(arr, lab) {
   document.getElementById("padasplit").innerHTML =
-    '<div class="padasplit"><b>படா பிரிப்பு:</b><br>'+lab+arr.map(pd=>`<div>${pd.nak} - பாதம் ${pd.pada} (${pd.lord}) <span class="dates">${formatDate(pd.start)} - ${formatDate(pd.end)}</span></div>`).join("")+'</div>';
+    '<div class="padasplit"><b>படா பிரிப்பு:</b><br>'+lab+arr.map(pd=>`<div>${pd.nak} - பாதம் ${pd.pada}  <span class="dates">${formatDate(pd.start)} - ${formatDate(pd.end)}</span></div>`).join("")+'</div>';
 }
 // EXPAND HANDLERS
 window.expandDasa = function(idx) { openState.dasa=idx; openState.puthi=null; openState.anthara=null; renderAll(); };
