@@ -3,37 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <title>விம்சோத்தரி தசை மற்றும் 108 பாதங்கள் ராசி கட்டம்</title>
-  <style>
-    body { font-family: 'Latha', Arial, sans-serif; background:#fffef8; text-align:center; padding:18px;}
-    .south-chart { display: grid; grid-template-columns: repeat(4,1fr); grid-template-areas:
-        "r10 r11 r12 r01" "r09 xx xx r02" "r08 xx xx r03" "r07 r06 r05 r04";
-      gap:3px; max-width:740px; margin:0 auto 22px;}
-    .box { background:#fff4dd; border:2px solid #b88; font-size:12px; color:#4b1d1d; box-sizing:border-box; 
-           display:flex;flex-direction:column;align-items:center;justify-content:flex-start; 
-           padding:5px 2px; text-align:left; height:182px; min-width:90px;}
-    .rasi-name { font-weight:bold; font-size:15px; color: maroon; margin-bottom:3px; text-align:center;}
-    .line { cursor:pointer; width:100%; border-radius:3px; padding:2px 2px; margin-bottom:1.2px; line-height:1.4;}
-    .highlight-dasa   { background:#1d60b2!important; color:#fff;font-weight:bold;}
-    .highlight-puthi  { background:#62a0ff!important; color:#003f75;}
-    .highlight-anth   { background:#d6ebff!important; color:#134766;}
-    .currentbox { margin:16px auto 24px auto; background:#e8ecf7; border-radius:7px; 
-      box-shadow: 0 1.5px 4px #87aed9bb; padding:12px 22px; font-size:1.14em; text-align:left; max-width:620px;}
-    .treeul { list-style:none; padding-left:28px; text-align:left; max-width:700px; margin:0 auto;}
-    .headli {font-weight:bold;}
-    .current-dasa    {background:#1d60b2 !important; color:#fff;}
-    .current-puthi   {background:#62a0ff !important; color:#003f75;}
-    .current-anthara {background:#d6ebff !important; color:#134766;}
-    .dates {color:#444; font-size:93%; margin-left:8px;}
-    .pada { color:#19733c;}
-    .padasplit { margin:20px 0 10px 0; background:#f4faff; border-radius:5px; padding:10px;}
-    .expcol { cursor:pointer; padding:2px 6px; background:#ddd; border-radius:3px; font-size:93%; margin-left:7px; color:#075; }
-    .expcol.open  { background:#bbdefb;}
-    .expcol:hover { text-decoration:underline; }
-    @media (max-width:900px) {
-      .box{height:auto;}
-      .south-chart{max-width:98vw;font-size:95%;}
+ <style>
+  body {
+    font-family: 'Latha', Arial, sans-serif;
+    background: #fffef8;
+    text-align: center;
+    padding: 18px;
+    margin: 0;
+  }
+
+  .south-chart {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas:
+      "r10  r11  r12  r01"
+      "r09  xx   xx   r02"
+      "r08  xx   xx   r03"
+      "r07  r06  r05  r04";
+    gap: 5px;
+    max-width: 740px;
+    margin: 0 auto 22px;
+  }
+
+  .box {
+    background: #fffdf5;
+    border: 2px solid #cfb292;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(100, 85, 50, 0.1);
+    font-size: 12.5px;
+    color: #4b1d1d;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: flex-start;
+    padding: 6px 2px;
+    height: 275px;
+    
+  }
+
+  .box:hover {
+    transform: scale(1.015);
+    background: #fff5e6;
+  }
+
+  .rasi-name {
+    font-weight: bold;
+    font-size: 15.5px;
+    color: #872b0c;
+    margin-bottom: 4px;
+    text-align: center;
+  }
+
+  .line {
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+    padding: 3px 2px;
+    margin-bottom: 1.5px;
+    line-height: 1.5;
+    transition: background 0.3s;
+  }
+
+  .line:hover {
+    background: #e9f0f9;
+  }
+
+  .highlight-dasa {
+    background: #1d60b2 !important;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  .highlight-puthi {
+    background: #62a0ff !important;
+    color: #003f75;
+  }
+
+  .highlight-anth {
+    background: #d6ebff !important;
+    color: #134766;
+  }
+
+  .currentbox {
+    margin: 16px auto 24px auto;
+    background: #e8ecf7;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px #87aed9aa;
+    padding: 16px 26px;
+    font-size: 1.1em;
+    text-align: left;
+    max-width: 640px;
+  }
+
+  .treeul {
+    list-style: none;
+    padding-left: 26px;
+    text-align: left;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .headli {
+    font-weight: bold;
+    margin: 4px 0;
+  }
+
+  .current-dasa {
+    background: #1d60b2 !important;
+    color: #fff;
+  }
+
+  .current-puthi {
+    background: #62a0ff !important;
+    color: #003f75;
+  }
+
+  .current-anthara {
+    background: #d6ebff !important;
+    color: #134766;
+  }
+
+  .dates {
+    color: #555;
+    font-size: 90%;
+    margin-left: 8px;
+  }
+
+  .pada {
+    color: #19733c;
+  }
+
+  .padasplit {
+    margin: 20px auto 20px auto;
+    background: #f4faff;
+    border-radius: 7px;
+    padding: 12px;
+    max-width: 620px;
+    box-shadow: 0 1px 3px #ccc;
+    font-size: 1em;
+    text-align: left;
+  }
+
+  .padasplit u {
+    font-weight: bold;
+    color: #444;
+  }
+
+  .expcol {
+    cursor: pointer;
+    padding: 2px 6px;
+    background: #ddd;
+    border-radius: 3px;
+    font-size: 93%;
+    margin-left: 7px;
+    color: #075;
+  }
+
+  .expcol.open {
+    background: #bbdefb;
+  }
+
+  .expcol:hover {
+    text-decoration: underline;
+  }
+
+  button[type=submit] {
+    background: #2f76d2;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 1.5px 4px rgba(0,0,0,0.1);
+    transition: background 0.2s ease;
+  }
+
+  button[type=submit]:hover {
+    background: #195ea8;
+  }
+    .r01 { grid-area: r11; }
+    .r02 { grid-area: r12; }
+    .r03 { grid-area: r01; }
+    .r04 { grid-area: r02; }
+    .r05 { grid-area: r03; }
+    .r06 { grid-area: r04; }
+    .r07 { grid-area: r05; }
+    .r08 { grid-area: r06; }
+    .r09 { grid-area: r07; }
+    .r10 { grid-area: r08; }
+    .r11 { grid-area: r09; }
+    .r12 { grid-area: r10; }
+  @media (max-width: 900px) {
+    .box {
+      height: auto;
     }
-  </style>
+    .south-chart {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-areas:
+          "r01 r02"
+          "r03 r04"
+          "r05 r06"
+          "r07 r08"
+          "r09 r10"
+          "r11 r12";
+      }
+    .currentbox, .padasplit {
+      margin: 10px auto;
+      font-size: 95%;
+    }
+  }
+</style>
+
 </head>
 <body>
   <h2>🌟 தென் இந்திய ராசி கட்டம் (108 பாதங்கள்) + <span style="color:#175397;">விம்சோத்தரி தசை</span> 🌟</h2>
@@ -42,7 +224,7 @@
     <div style="margin-bottom:6px;">
       <label>பிறந்த தேதி: <input type="date" id="dob" required></label>
       <span class="moonbox" style="margin-left:8px;">
-        சந்திரன் நீளம்: <input type="number" id="moon_deg" min="0" max="359" step="1" required style="width:38px;">°
+        சந்திரன் Degree : <input type="number" id="moon_deg" min="0" max="359" step="1" required style="width:38px;">°
         <input type="number" id="moon_min" min="0" max="59"  step="1" required style="width:38px;">'
         <input type="number" id="moon_sec" min="0" max="59"  step="1" required style="width:38px;">"
       </span>
